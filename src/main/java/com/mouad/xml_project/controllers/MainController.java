@@ -72,8 +72,8 @@ public class MainController {
 
     private void generateEDTasHTML() {
         AlertUtil.showInfoAlert("HTML Generation", "EDT demandée (HTML).");
-        String inputXML = "../Xslt/EDT.xml";
-        String xsltFile = "../Xslt/EDT.xslt";
+        String inputXML = "../xslt/EDT.xml";
+        String xsltFile = "../xslt/EDT.xslt";
         String outputHTML = "../Output/HTML-EDT/EDT.html";
 
         try {
