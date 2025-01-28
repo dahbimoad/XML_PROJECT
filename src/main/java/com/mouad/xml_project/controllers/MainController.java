@@ -6,12 +6,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainController {
-     @FXML private TextField CarteCne;
+
+    @FXML private TextField CarteCne;
     @FXML private TextField ReuCne;
     @FXML private TextField InscCne;
     @FXML private CheckBox pdfinsc;
@@ -30,227 +33,322 @@ public class MainController {
     @FXML private CheckBox StudentAffichage;
     @FXML private TextField AffichageCne;
 
-    // 1) Handle the generation of ED (HTML, PDF, Excel)
+    private static final String BASE_OUTPUT_DIR = "Output";
+    private static final String XML_BASE_PATH = "/com/mouad/xml_project/xml";
+    private static final String XSLT_BASE_PATH = "/com/mouad/xml_project/xslt";
+
+    /**
+     * Validates CNE input
+     */
+    private boolean validateCNE(String cne) {
+        return cne != null && !cne.trim().isEmpty() && cne.matches("[A-Z0-9]+");
+    }
+
+    /**
+     * Gets resource URL and checks for null
+     */
+    private URL getResourceURL(String path, String resourceType) {
+        URL url = getClass().getResource(path);
+        if (url == null) {
+            throw new RuntimeException("Unable to find " + resourceType + " resource: " + path);
+        }
+        return url;
+    }
+
+    /**
+     * Generic method to handle document generation
+     */
+    private void generateDocument(String xmlPath, String xsltPath, String outputPath,
+                                Map<String, String> params, String type) {
+        try {
+            switch (type.toLowerCase()) {
+                case "pdf":
+                    DocumentGenerationService.generatePdf(xmlPath, xsltPath, outputPath, params);
+                    break;
+                case "html":
+                    DocumentGenerationService.generateHtml(xmlPath, xsltPath, outputPath, params);
+                    break;
+                case "excel":
+                    DocumentGenerationService.generateExcel(xmlPath, xsltPath, outputPath, params);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported document type: " + type);
+            }
+            AlertUtil.showInfoAlert("Success", "Document generated successfully at: " + outputPath);
+        } catch (Exception e) {
+            AlertUtil.showErrorAlert("Error", "Failed to generate " + type + " document: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    // --------------------------------------
+    // 1) Handle the generation of EDT
+    // --------------------------------------
     @FXML
     public void HandleGeneration() {
-        if (EDTHTMLChoice.isSelected()) {
-            AlertUtil.showInfoAlert("HTML Generation", "HTML generation requested.");
-            generateEDTasHTML();
-        }
-        if (EDTPDFChoice.isSelected()) {
-            AlertUtil.showInfoAlert("PDF Generation", "PDF generation requested.");
-            generateEDTasPDF();
-        }
-        if (EDTExcelChoice.isSelected()) {
-            AlertUtil.showInfoAlert("Excel Generation", "Excel generation requested.");
-            generateEDTasExcel();
+        try {
+            if (EDTHTMLChoice.isSelected()) {
+                generateEDTasHTML();
+            }
+            if (EDTPDFChoice.isSelected()) {
+                generateEDTasPDF();
+            }
+            if (EDTExcelChoice.isSelected()) {
+                generateEDTasExcel();
+            }
+            if (!EDTHTMLChoice.isSelected() && !EDTPDFChoice.isSelected() && !EDTExcelChoice.isSelected()) {
+                AlertUtil.showWarningAlert("Warning", "Please select at least one output format.");
+            }
+        } catch (Exception e) {
+            AlertUtil.showErrorAlert("Error", "Failed to generate EDT: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     private void generateEDTasPDF() {
-        AlertUtil.showInfoAlert("PDF Generation", "EDT demandée");
-        // Example usage
-        String inputXML = "../Xsl/EDT.xml";
-        String xsltFile = "../Xsl/EDT.xsl";
-        String outputPDF = "../Output/PDF-EDT/EDT.pdf";
+        URL xsltUrl = getResourceURL(XSLT_BASE_PATH + "/EDT.xslt", "XSLT");
+        URL xmlUrl = getResourceURL(XML_BASE_PATH + "/EDT.xml", "XML");
 
-        DocumentGenerationService.generatePdf(inputXML, xsltFile, outputPDF, null);
+        String outputPDF = BASE_OUTPUT_DIR + "/PDF-EDT/EDT.pdf";
+        generateDocument(xmlUrl.toExternalForm(), xsltUrl.toExternalForm(), outputPDF, null, "pdf");
     }
 
     private void generateEDTasExcel() {
-        AlertUtil.showInfoAlert("Excel Generation", "EDT demandée (Excel).");
-        String inputXML = "../Xslt/EDT.xml";
-        String xsltFile = "../Xslt/EDT_Excel.xslt";
-        String outputXLS = "../Output/Excel-EDT/EDT.xls";
+        URL xsltUrl = getResourceURL(XSLT_BASE_PATH + "/EDT_Excel.xslt", "XSLT");
+        URL xmlUrl = getResourceURL(XML_BASE_PATH + "/EDT.xml", "XML");
 
-        try {
-            DocumentGenerationService.generateExcel(inputXML, xsltFile, outputXLS, null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String outputXLS = BASE_OUTPUT_DIR + "/Excel-EDT/EDT.xls";
+        generateDocument(xmlUrl.toExternalForm(), xsltUrl.toExternalForm(), outputXLS, null, "excel");
     }
 
     private void generateEDTasHTML() {
-        AlertUtil.showInfoAlert("HTML Generation", "EDT demandée (HTML).");
-        String inputXML = "../xslt/EDT.xml";
-        String xsltFile = "../xslt/EDT.xslt";
-        String outputHTML = "../Output/HTML-EDT/EDT.html";
+        URL xsltUrl = getResourceURL(XSLT_BASE_PATH + "/EDT.xslt", "XSLT");
+        URL xmlUrl = getResourceURL(XML_BASE_PATH + "/EDT.xml", "XML");
 
+        String outputHTML = BASE_OUTPUT_DIR + "/HTML-EDT/EDT.html";
+        generateDocument(xmlUrl.toExternalForm(), xsltUrl.toExternalForm(), outputHTML, null, "html");
+    }
+
+    // --------------------------------------
+    // 2) Handle Affichage (Notes, Student notes)
+    // --------------------------------------
+    @FXML
+    private void HandleAffichage() {
         try {
-            DocumentGenerationService.generateHtml(inputXML, xsltFile, outputHTML, null);
-        } catch (IOException e) {
+            if (AffichageNotes.isSelected()) {
+                handleAllNotesDisplay();
+            }
+            if (StudentAffichage.isSelected()) {
+                handleSingleStudentDisplay();
+            }
+            if (!AffichageNotes.isSelected() && !StudentAffichage.isSelected()) {
+                AlertUtil.showWarningAlert("Warning", "Please select a display option.");
+            }
+        } catch (Exception e) {
+            AlertUtil.showErrorAlert("Error", "Failed to display notes: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
+    private void handleAllNotesDisplay() {
+        URL xmlUrl = getResourceURL(XML_BASE_PATH + "/S3S4notessmall.xml", "XML");
+        URL xsltUrl = getResourceURL(XSLT_BASE_PATH + "/AffichageParEtu.xslt", "XSLT");
 
-    // 2) Handle Affichage (Notes, Student notes)
-    @FXML
-    private void HandleAffichage() {
-        if (AffichageNotes.isSelected()) {
-            AlertUtil.showInfoAlert("Affichage Generation", "Affichage des notes demandé.");
-            try {
-                String inputXML = "../Xslt/S3S4notessmall.xml";
-                String xsltFile = "../Xslt/AffichageParEtu.xslt";
-                String outputHTML = "../Output/HTMLEtudiant/AffichageClasse.html";
-
-                DocumentGenerationService.generateHtml(inputXML, xsltFile, outputHTML, null);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        if (StudentAffichage.isSelected()) {
-            String cne = AffichageCne.getText();
-            AlertUtil.showInfoAlert("Affichage Generation", "Affichage des notes pour le CNE = " + cne);
-            try {
-                String inputXML = "../Xslt/S3S4notessmall.xml";
-                String xsltFile = "../Xslt/AffichageParEtu.xslt";
-                String outputHTML = "../Output/HTMLEtudiant/" + cne + "Affichage.html";
-
-                // Pass the cne as a parameter to the XSLT
-                Map<String, String> params = new HashMap<>();
-                params.put("studentCNE", cne);
-
-                DocumentGenerationService.generateHtml(inputXML, xsltFile, outputHTML, params);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        String outputHTML = BASE_OUTPUT_DIR + "/HTMLEtudiant/AffichageClasse.html";
+        generateDocument(xmlUrl.toExternalForm(), xsltUrl.toExternalForm(), outputHTML, null, "html");
     }
 
+    private void handleSingleStudentDisplay() {
+        String cne = AffichageCne.getText();
+        if (!validateCNE(cne)) {
+            AlertUtil.showErrorAlert("Input Error", "Please enter a valid CNE.");
+            return;
+        }
+
+        URL xmlUrl = getResourceURL(XML_BASE_PATH + "/S3S4notessmall.xml", "XML");
+        URL xsltUrl = getResourceURL(XSLT_BASE_PATH + "/AffichageParEtu.xslt", "XSLT");
+
+        Map<String, String> params = new HashMap<>();
+        params.put("studentCNE", cne);
+
+        String outputHTML = BASE_OUTPUT_DIR + "/HTMLEtudiant/" + cne + "Affichage.html";
+        generateDocument(xmlUrl.toExternalForm(), xsltUrl.toExternalForm(), outputHTML, params, "html");
+    }
+
+    // --------------------------------------
     // 3) Generate Attestation de Réussite
+    // --------------------------------------
     @FXML
     public void GenererReu(ActionEvent actionEvent) {
         String cne = ReuCne.getText();
-
-        if (pdfreu.isSelected()) {
-            AlertUtil.showInfoAlert("PDF Generation", "Attestation de Réussite demandée (PDF).");
-            String inputXML = "../Xsl/etudiants.xml";
-            String xsltFile = "../Xsl/Attestation_reu_pdf.xsl";
-            String outputPDF = "../Output/PDF-Reussite/" + cne + "AttReussite.pdf";
-
-            Map<String, String> params = new HashMap<>();
-            params.put("cne", cne);
-
-            DocumentGenerationService.generatePdf(inputXML, xsltFile, outputPDF, params);
+        if (!validateCNE(cne)) {
+            AlertUtil.showErrorAlert("Input Error", "Please enter a valid CNE.");
+            return;
         }
 
-        if (htmlreu.isSelected()) {
-            AlertUtil.showInfoAlert("HTML Generation", "Attestation de Réussite demandée (HTML).");
-            String inputXML = "../Xslt/etudiants.xml";
-            String xsltFile = "../Xslt/AttestationReus.xslt";
-            String outputHTML = "../Output/HTML-Reussite/" + cne + "AttReussite.html";
+        try {
+            if (pdfreu.isSelected()) {
+                URL xmlUrl = getResourceURL(XML_BASE_PATH + "/etudiants.xml", "XML");
+                URL xsltUrl = getResourceURL(XSLT_BASE_PATH + "/Attestation_reu_pdf.xsl", "XSLT");
 
-            Map<String, String> params = new HashMap<>();
-            params.put("cne", cne);
+                Map<String, String> params = new HashMap<>();
+                params.put("cne", cne);
 
-            try {
-                DocumentGenerationService.generateHtml(inputXML, xsltFile, outputHTML, params);
-            } catch (IOException e) {
-                e.printStackTrace();
+                String outputPDF = BASE_OUTPUT_DIR + "/PDF-Reussite/" + cne + "AttReussite.pdf";
+                generateDocument(xmlUrl.toExternalForm(), xsltUrl.toExternalForm(), outputPDF, params, "pdf");
             }
+
+            if (htmlreu.isSelected()) {
+                URL xmlUrl = getResourceURL(XML_BASE_PATH + "/etudiants.xml", "XML");
+                URL xsltUrl = getResourceURL(XSLT_BASE_PATH + "/AttestationReus.xslt", "XSLT");
+
+                Map<String, String> params = new HashMap<>();
+                params.put("cne", cne);
+
+                String outputHTML = BASE_OUTPUT_DIR + "/HTML-Reussite/" + cne + "AttReussite.html";
+                generateDocument(xmlUrl.toExternalForm(), xsltUrl.toExternalForm(), outputHTML, params, "html");
+            }
+
+            if (!pdfreu.isSelected() && !htmlreu.isSelected()) {
+                AlertUtil.showWarningAlert("Warning", "Please select at least one output format.");
+            }
+        } catch (Exception e) {
+            AlertUtil.showErrorAlert("Error", "Failed to generate attestation de réussite: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
+    // --------------------------------------
     // 4) Generate Attestation d'Inscription
+    // --------------------------------------
     @FXML
     public void GenererInsc(ActionEvent actionEvent) {
         String cne = InscCne.getText();
-
-        if (pdfinsc.isSelected()) {
-            AlertUtil.showInfoAlert("PDF Generation", "Attestation d'Inscription demandée (PDF).");
-            String inputXML = "../Xsl/etudiants.xml";
-            String xsltFile = "../Xsl/Attestation_ins_pdf.xsl";
-            String outputPDF = "../Output/PDF-Inscription/" + cne + "AttInscription.pdf";
-
-            Map<String, String> params = new HashMap<>();
-            params.put("cne", cne);
-
-            DocumentGenerationService.generatePdf(inputXML, xsltFile, outputPDF, params);
+        if (!validateCNE(cne)) {
+            AlertUtil.showErrorAlert("Input Error", "Please enter a valid CNE.");
+            return;
         }
 
-        if (htmlinsc.isSelected()) {
-            AlertUtil.showInfoAlert("HTML Generation", "Attestation d'Inscription demandée (HTML).");
-            String inputXML = "../Xslt/etudiants.xml";
-            String xsltFile = "../Xslt/AttestationInsc.xslt";
-            String outputHTML = "../Output/HTML-Inscription/" + cne + "AttInscription.html";
+        try {
+            if (pdfinsc.isSelected()) {
+                URL xmlUrl = getResourceURL(XML_BASE_PATH + "/etudiants.xml", "XML");
+                URL xsltUrl = getResourceURL(XSLT_BASE_PATH + "/Attestation_ins_pdf.xsl", "XSLT");
 
-            Map<String, String> params = new HashMap<>();
-            params.put("cne", cne);
+                Map<String, String> params = new HashMap<>();
+                params.put("cne", cne);
 
-            try {
-                DocumentGenerationService.generateHtml(inputXML, xsltFile, outputHTML, params);
-            } catch (IOException e) {
-                e.printStackTrace();
+                String outputPDF = BASE_OUTPUT_DIR + "/PDF-Inscription/" + cne + "AttInscription.pdf";
+                generateDocument(xmlUrl.toExternalForm(), xsltUrl.toExternalForm(), outputPDF, params, "pdf");
             }
+
+            if (htmlinsc.isSelected()) {
+                URL xmlUrl = getResourceURL(XML_BASE_PATH + "/etudiants.xml", "XML");
+                URL xsltUrl = getResourceURL(XSLT_BASE_PATH + "/AttestationInsc.xslt", "XSLT");
+
+                Map<String, String> params = new HashMap<>();
+                params.put("cne", cne);
+
+                String outputHTML = BASE_OUTPUT_DIR + "/HTML-Inscription/" + cne + "AttInscription.html";
+                generateDocument(xmlUrl.toExternalForm(), xsltUrl.toExternalForm(), outputHTML, params, "html");
+            }
+
+            if (!pdfinsc.isSelected() && !htmlinsc.isSelected()) {
+                AlertUtil.showWarningAlert("Warning", "Please select at least one output format.");
+            }
+        } catch (Exception e) {
+            AlertUtil.showErrorAlert("Error", "Failed to generate attestation d'inscription: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
+    // --------------------------------------
     // 5) Generate Carte Etudiant
+    // --------------------------------------
     @FXML
     public void GenererCarte(ActionEvent actionEvent) {
         String cne = CarteCne.getText();
-
-        if (pdfcarte.isSelected()) {
-            AlertUtil.showInfoAlert("PDF Generation", "Carte d'étudiant demandée (PDF).");
-            String inputXML = "../Xsl/etudiants.xml";
-            String xsltFile = "../Xsl/Carte_Etudiant.xsl";
-            String outputPDF = "../Output/PDF-CarteEtu/" + cne + "CarteEtudiant.pdf";
-
-            Map<String, String> params = new HashMap<>();
-            params.put("cne", cne);
-
-            DocumentGenerationService.generatePdf(inputXML, xsltFile, outputPDF, params);
+        if (!validateCNE(cne)) {
+            AlertUtil.showErrorAlert("Input Error", "Please enter a valid CNE.");
+            return;
         }
 
-        if (htmlcarte.isSelected()) {
-            AlertUtil.showInfoAlert("HTML Generation", "Carte d'étudiant demandée (HTML).");
-            String inputXML = "../Xslt/etudiants.xml";
-            String xsltFile = "../Xslt/CarteEtudiantxslt.xslt";
-            String outputHTML = "../Output/HTML-CarteEtu/" + cne + "CarteEtudiant.html";
+        try {
+            if (pdfcarte.isSelected()) {
+                URL xmlUrl = getResourceURL(XML_BASE_PATH + "/etudiants.xml", "XML");
+                URL xsltUrl = getResourceURL(XSLT_BASE_PATH + "/Carte_Etudiant.xsl", "XSLT");
 
-            Map<String, String> params = new HashMap<>();
-            params.put("cne", cne);
+                Map<String, String> params = new HashMap<>();
+                params.put("cne", cne);
 
-            try {
-                DocumentGenerationService.generateHtml(inputXML, xsltFile, outputHTML, params);
-            } catch (IOException e) {
-                e.printStackTrace();
+                String outputPDF = BASE_OUTPUT_DIR + "/PDF-CarteEtu/" + cne + "CarteEtudiant.pdf";
+                generateDocument(xmlUrl.toExternalForm(), xsltUrl.toExternalForm(), outputPDF, params, "pdf");
             }
+
+            if (htmlcarte.isSelected()) {
+                URL xmlUrl = getResourceURL(XML_BASE_PATH + "/etudiants.xml", "XML");
+                URL xsltUrl = getResourceURL(XSLT_BASE_PATH + "/CarteEtudiantxslt.xslt", "XSLT");
+
+                Map<String, String> params = new HashMap<>();
+                params.put("cne", cne);
+
+                String outputHTML = BASE_OUTPUT_DIR + "/HTML-CarteEtu/" + cne + "CarteEtudiant.html";
+                generateDocument(xmlUrl.toExternalForm(), xsltUrl.toExternalForm(), outputHTML, params, "html");
+            }
+
+            if (!pdfcarte.isSelected() && !htmlcarte.isSelected()) {
+                AlertUtil.showWarningAlert("Warning", "Please select at least one output format.");
+            }
+        } catch (Exception e) {
+            AlertUtil.showErrorAlert("Error", "Failed to generate student card: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
+    // --------------------------------------
     // 6) Affichage par module
+    // --------------------------------------
     @FXML
     public void AffichageMod(ActionEvent actionEvent) {
-        if (tousmod.isSelected()) {
-            AlertUtil.showInfoAlert("Affichage Generation", "Affichage des notes par module (tous) demandé.");
-            String inputXML = "../Xslt/Modules.xml";
-            String xsltFile = "../Xslt/AffichageParModule.xslt";
-            String outputHTML = "../Output/HTMLEtudiant/AffichageModules.html";
-
-            try {
-                DocumentGenerationService.generateHtml(inputXML, xsltFile, outputHTML, null);
-            } catch (IOException e) {
-                e.printStackTrace();
+        try {
+            if (tousmod.isSelected()) {
+                handleAllModulesDisplay();
             }
+
+            if (unseulmod.isSelected()) {
+                handleSingleModuleDisplay();
+            }
+
+            if (!tousmod.isSelected() && !unseulmod.isSelected()) {
+                AlertUtil.showWarningAlert("Warning", "Please select a module display option.");
+            }
+        } catch (Exception e) {
+            AlertUtil.showErrorAlert("Error", "Failed to display modules: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void handleAllModulesDisplay() {
+        URL xmlUrl = getResourceURL(XML_BASE_PATH + "/Modules.xml", "XML");
+        URL xsltUrl = getResourceURL(XSLT_BASE_PATH + "/AffichageParModule.xslt", "XSLT");
+
+        String outputHTML = BASE_OUTPUT_DIR + "/HTMLEtudiant/AffichageModules.html";
+        generateDocument(xmlUrl.toExternalForm(), xsltUrl.toExternalForm(), outputHTML, null, "html");
+    }
+
+    private void handleSingleModuleDisplay() {
+        String code = CodeModule.getText();
+        if (code == null || code.trim().isEmpty()) {
+            AlertUtil.showErrorAlert("Input Error", "Please enter a valid module code.");
+            return;
         }
 
-        if (unseulmod.isSelected()) {
-            String code = CodeModule.getText();
-            AlertUtil.showInfoAlert("Affichage Generation", "Affichage des notes pour module = " + code);
-            String inputXML = "../Xslt/Modules.xml";
-            String xsltFile = "../Xslt/AffichageParModule.xslt";
-            String outputHTML = "../Output/HTMLEtudiant/" + code + "Affichage.html";
+        URL xmlUrl = getResourceURL(XML_BASE_PATH + "/Modules.xml", "XML");
+        URL xsltUrl = getResourceURL(XSLT_BASE_PATH + "/AffichageParModule.xslt", "XSLT");
 
-            Map<String, String> params = new HashMap<>();
-            params.put("codeModu", code);
+        Map<String, String> params = new HashMap<>();
+        params.put("codeModu", code);
 
-            try {
-                DocumentGenerationService.generateHtml(inputXML, xsltFile, outputHTML, params);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        String outputHTML = BASE_OUTPUT_DIR + "/HTMLEtudiant/" + code + "Affichage.html";
+        generateDocument(xmlUrl.toExternalForm(), xsltUrl.toExternalForm(), outputHTML, params, "html");
     }
 }

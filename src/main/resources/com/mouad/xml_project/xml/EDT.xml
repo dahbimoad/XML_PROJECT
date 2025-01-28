@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<emploi xmlns="http://GINF2Emploi.org">    
+    <Days>
+        <day name="Lundi"></day>
+        <day name="Mardi"></day>
+        <day name="Mercredi"></day>
+        <day name="Jeudi"></day>
+        <day name="Vendredi"></day>
+        <day name="Samedi"></day>
+    </Days>
+    <times>
+        <time t="08:00"></time>
+        <time t="08:30"></time>
+        <time t="09:00-10:30"></time>
+        <time t="11:00-12:30"></time>
+        <time t="13:00"></time>
+        <time t="13:30"></time>
+        <time t="14:00-15:30"></time>
+        <time t="16:00-17:30"></time>
+        <time t="18:00"></time>
+        <time t="18:30"></time>
+    </times>
+    
+    <matieres>
+        
+        <matiere>
+            <nom>MODELISATION OR</nom>
+            <type>TD - </type>
+            <startTime>09:00-10:30</startTime>
+            <endTime>10:30</endTime>
+            <jour>Lundi</jour>
+            <nomProf>EL ALAMI</nomProf>
+            <salle>SALLE B19</salle>
+        </matiere>
+        
+        <matiere>
+            <nom>MODELISATION OR</nom>
+            <type>CM - </type>
+            <startTime>11:00-12:30</startTime>
+            <endTime>12:30</endTime>
+            <jour>Lundi</jour>
+            <nomProf>EL ALAMI</nomProf>
+            <salle>SALLE B19</salle>
+        </matiere>
+        
+        <matiere>
+            <nom>CYCLE DE VIE LO</nom>
+            <type>CM - </type>
+            <startTime>14:00-15:30</startTime>
+            <endTime>15:30</endTime>
+            <jour>Lundi</jour>
+            <nomProf>BADIR</nomProf>
+            <salle>Salle B19</salle>
+        </matiere>
+        
+        <matiere>
+            <nom>CYCLE DE VIE LO</nom>
+            <type>CM - </type>
+            <startTime>16:00-17:30</startTime>
+            <endTime>17:30</endTime>
+            <jour>Lundi</jour>
+            <nomProf>BADIR</nomProf>
+            <salle>Salle B19</salle>
+        </matiere>
+        
+        <matiere>
+            <nom>GESTION DES DONN</nom>
+            <type>CM - </type>
+            <startTime>09:00-10:30</startTime>
+            <endTime>10:30</endTime>
+            <jour>Mardi</jour>
+            <nomProf>FISSOUNE</nomProf>
+            <salle>SALLE B20</salle>
+        </matiere>
+        
+        <matiere>
+            <nom>GESTION DES DONN</nom>
+            <type>TP - </type>
+            <startTime>11:00-12:30</startTime>
+            <endTime>12:30</endTime>
+            <jour>Mardi</jour>
+            <nomProf>FISSOUNE</nomProf>
+            <salle>SALLE B20</salle>
+        </matiere>
+        
+        <matiere>
+            <nom>PROGRAMMATION SY</nom>
+            <type>TP - </type>
+            <startTime>14:00-15:30</startTime>
+            <endTime>15:30</endTime>
+            <jour>Mardi</jour>
+            <nomProf>AMECHNOUE</nomProf>
+            <salle>SALLE B6</salle>
+        </matiere>
+        
+        <matiere>
+            <nom>PROGRAMMATION SY</nom>
+            <type>TP - </type>
+            <startTime>16:00-17:30</startTime>
+            <endTime>17:30</endTime>
+            <jour>Mardi</jour>
+            <nomProf>AMECHNOUE</nomProf>
+            <salle>SALLE B6</salle>
+        </matiere>
+        
+        <matiere>
+            <nom>PROGRAMMATION OR</nom>
+            <type>CM - </type>
+            <startTime>09:00-10:30</startTime>
+            <endTime>10:30</endTime>
+            <jour>Mercredi</jour>
+            <nomProf>EL HADDAD</nomProf>
+            <salle>SALLE B19</salle>
+        </matiere>
+        
+        <matiere>
+            <nom>PROGRAMMATION OR</nom>
+            <type>TP - </type>
+            <startTime>11:00-12:30</startTime>
+            <endTime>12:30</endTime>
+            <jour>Mercredi</jour>
+            <nomProf>EL HADDAD</nomProf>
+            <salle>SALLE B19</salle>
+        </matiere>
+        
+        <matiere>
+            <nom>INTERFACE HOMME</nom>
+            <type>CM - </type>
+            <startTime>09:00-10:30</startTime>
+            <endTime>10:45</endTime>
+            <jour>Jeudi</jour>
+            <nomProf>EL ALAMI</nomProf>
+            <salle>SALLE B19</salle>
+        </matiere>
+        
+        <matiere>
+            <nom>INTERFACE HOMME</nom>
+            <type>TD - </type>
+            <startTime>11:00-12:30</startTime>
+            <endTime>12:45</endTime>
+            <jour>Jeudi</jour>
+            <nomProf>EL ALAMI</nomProf>
+            <salle>SALLE B19</salle>
+        </matiere>
+        
+        <matiere>
+            <nom>ESPAGNOLE</nom>
+            <type>CM - </type>
+            <startTime>14:00-15:30</startTime>
+            <endTime>15:30</endTime>
+            <jour>Jeudi</jour>
+            <nomProf>LAAMARTI</nomProf>
+            <salle>SALLE B22</salle>
+        </matiere>
+        
+        <matiere>
+            <nom>PROGRAMMATION SY</nom>
+            <type>CM - </type>
+            <startTime>16:00-17:30</startTime>
+            <endTime>17:30</endTime>
+            <jour>Mercredi</jour>
+            <nomProf>AMECHNOUE</nomProf>
+            <salle>SALLE B22</salle>
+        </matiere>
+        
+        <matiere>
+            <nom>TECHN COMM</nom>
+            <type>CM - </type>
+            <startTime>09:00-10:30</startTime>
+            <endTime>10:30</endTime>
+            <jour>Vendredi</jour>
+            <nomProf>EL ALAMI</nomProf>
+            <salle>SALLE B19</salle>
+        </matiere>
+        
+        <matiere>
+            <nom>TECHN COMM</nom>
+            <type>TD - </type>
+            <startTime>11:00-12:30</startTime>
+            <endTime>12:45</endTime>
+            <jour>Vendredi</jour>
+            <nomProf>EL ALAMI</nomProf>
+            <salle>SALLE B19</salle>
+        </matiere>
+        
+        <matiere>
+            <nom>ASSURANCE CONTR</nom>
+            <type>CM - </type>
+            <startTime>16:00-17:30</startTime>
+            <endTime>17:30</endTime>
+            <jour>Vendredi</jour>
+            <nomProf>CHICHI</nomProf>
+            <salle>SALLE A7</salle>
+        </matiere>
+        
+    </matieres>
+    
+    <footer>
+        <titlefooter>Légendes des en-tetes : </titlefooter>
+        <f1>Cours</f1>
+        <f2>TP</f2>
+        <f3>TD</f3>
+        
+    </footer>
+    
+</emploi>
