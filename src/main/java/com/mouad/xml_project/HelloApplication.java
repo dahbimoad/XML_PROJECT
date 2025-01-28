@@ -7,13 +7,12 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
 
 public class HelloApplication extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/com/mouad/xml_project/main-view.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/com/mouad/xml_project/fxml/main-view.fxml"));
             primaryStage.setTitle("Gestion de Scolarité - GINF2");
             primaryStage.setScene(new Scene(root, 800, 600));
 
