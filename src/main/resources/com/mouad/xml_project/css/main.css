@@ -1,0 +1,106 @@
+/*
+   main.css
+   A minimal modern UI style for JavaFX,
+   using simple colors, spacing, and hover effects.
+*/
+
+/* The root of the scene or any parent container */
+.root {
+    -fx-font-family: "Segoe UI", "Roboto", sans-serif;
+    -fx-font-size: 13px;
+    -fx-background-color: #F3F4F6; /* light gray background */
+}
+
+/* A top header bar for the application title */
+.header-bar {
+    -fx-background-color: #3C7FB1; /* a nice blue color */
+    -fx-padding: 10 15;
+}
+
+.header-title {
+    -fx-font-size: 18px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* Style for each TabPane's content area */
+.tab-content-pane {
+    -fx-background-color: white;
+    -fx-padding: 20;
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 0 0 0 2;
+}
+
+/* The tab header area itself */
+.tab-pane {
+    -fx-tab-min-width: 130;
+    -fx-tab-max-width: 200;
+    -fx-tab-min-height: 40;
+    -fx-background-insets: 0;
+}
+
+/* Customize the tab labels */
+.tab-pane .tab-label {
+    -fx-text-fill: #333;
+    -fx-font-weight: bold;
+}
+
+/* The area behind tabs */
+.tab-pane .tab-header-background {
+    -fx-background-color: #D7DFE8;
+}
+
+/* TitledPane style (Attestations) */
+.titled-pane > .title {
+    -fx-background-color: #3C7FB1;
+    -fx-text-fill: #FFFFFF;
+    -fx-padding: 8 10;
+    -fx-font-weight: bold;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+}
+
+/* Expand/Collapse arrow color */
+.titled-pane > .title > .arrow-button .arrow {
+    -fx-background-color: #FFFFFF;
+}
+
+/* Section Title style (like "Génération Emploi du Temps") */
+.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2C3E50;
+    -fx-underline: true;
+}
+
+/* Primary button style */
+.primary-button {
+    -fx-background-color: #3C7FB1;
+    -fx-text-fill: #FFFFFF;
+    -fx-background-radius: 4;
+    -fx-font-weight: bold;
+    -fx-padding: 6 12;
+    -fx-cursor: hand;
+}
+.primary-button:hover {
+    -fx-background-color: #2B5C83;
+}
+
+/* CheckBox & Label style tweaks */
+.check-box, .label {
+    -fx-text-fill: #333333;
+}
+
+/* TextField style */
+.text-field {
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-border-color: #CCC;
+    -fx-padding: 4 8;
+}
+
+/* ScrollPane */
+.scroll-pane {
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}

@@ -5,6 +5,7 @@ module com.mouad.xml_project {
     requires fop.core;
 
 
+    opens com.mouad.xml_project.controllers to javafx.fxml;
     opens com.mouad.xml_project to javafx.fxml;
     exports com.mouad.xml_project;
 }

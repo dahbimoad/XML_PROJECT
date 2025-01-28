@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.mouad.xml_project.controllers.MainController"
+            stylesheets="@../css/main.css">
+
+    <!-- Adjust the size/position as needed -->
+    <children>
+        <TabPane layoutX="14.0" layoutY="14.0" prefHeight="600.0" prefWidth="760.0">
+            <tabs>
+
+                <!-- ==================== TAB: EDT ==================== -->
+                <Tab text="EDT">
+                    <AnchorPane>
+                        <children>
+                            <CheckBox fx:id="EDTHTMLChoice"
+                                      layoutX="14" layoutY="14"
+                                      text="Generate HTML" />
+
+                            <CheckBox fx:id="EDTPDFChoice"
+                                      layoutX="14" layoutY="44"
+                                      text="Generate PDF" />
+
+                            <CheckBox fx:id="EDTExcelChoice"
+                                      layoutX="14" layoutY="74"
+                                      text="Generate Excel" />
+
+                            <Button layoutX="14" layoutY="110"
+                                    text="Generate"
+                                    onAction="#HandleGeneration" />
+                        </children>
+                    </AnchorPane>
+                </Tab>
+
+                <!-- ================= TAB: AFFICHAGE NOTES ================= -->
+                <Tab text="Affichage">
+                    <AnchorPane>
+                        <children>
+                            <CheckBox fx:id="AffichageNotes"
+                                      layoutX="14" layoutY="14"
+                                      text="Affichage Notes (Classe)" />
+
+                            <CheckBox fx:id="StudentAffichage"
+                                      layoutX="14" layoutY="44"
+                                      text="Student Affichage" />
+
+                            <Label layoutX="14" layoutY="74" text="CNE:" />
+                            <TextField fx:id="AffichageCne"
+                                       layoutX="54" layoutY="70" />
+
+                            <Button layoutX="14" layoutY="110"
+                                    text="Afficher"
+                                    onAction="#HandleAffichage" />
+                        </children>
+                    </AnchorPane>
+                </Tab>
+
+                <!-- ==================== TAB: ATTESTATIONS ==================== -->
+                <Tab text="Attestations">
+                    <!-- We'll use a VBox inside this tab to space out TitledPanes -->
+                    <AnchorPane>
+                        <VBox layoutX="14" layoutY="14" spacing="20">
+                            <children>
+
+                                <!-- =========== Attestation de Réussite =========== -->
+                                <TitledPane text="Attestation de Réussite" expanded="false">
+                                    <content>
+                                        <AnchorPane>
+                                            <children>
+                                                <CheckBox fx:id="pdfreu"
+                                                          layoutX="14" layoutY="14"
+                                                          text="PDF" />
+                                                <CheckBox fx:id="htmlreu"
+                                                          layoutX="14" layoutY="44"
+                                                          text="HTML" />
+
+                                                <Label layoutX="120" layoutY="14" text="CNE:" />
+                                                <TextField fx:id="ReuCne"
+                                                           layoutX="160" layoutY="10" />
+
+                                                <Button layoutX="320" layoutY="10"
+                                                        text="Générer"
+                                                        onAction="#GenererReu" />
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </TitledPane>
+
+                                <!-- =========== Attestation d'Inscription =========== -->
+                                <TitledPane text="Attestation d'Inscription" expanded="false">
+                                    <content>
+                                        <AnchorPane>
+                                            <children>
+                                                <CheckBox fx:id="pdfinsc"
+                                                          layoutX="14" layoutY="14"
+                                                          text="PDF" />
+                                                <CheckBox fx:id="htmlinsc"
+                                                          layoutX="14" layoutY="44"
+                                                          text="HTML" />
+
+                                                <Label layoutX="120" layoutY="14" text="CNE:" />
+                                                <TextField fx:id="InscCne"
+                                                           layoutX="160" layoutY="10" />
+
+                                                <Button layoutX="320" layoutY="10"
+                                                        text="Générer"
+                                                        onAction="#GenererInsc" />
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </TitledPane>
+
+                                <!-- =========== Carte Étudiant =========== -->
+                                <TitledPane text="Carte Étudiant" expanded="false">
+                                    <content>
+                                        <AnchorPane>
+                                            <children>
+                                                <CheckBox fx:id="pdfcarte"
+                                                          layoutX="14" layoutY="14"
+                                                          text="PDF" />
+                                                <CheckBox fx:id="htmlcarte"
+                                                          layoutX="14" layoutY="44"
+                                                          text="HTML" />
+
+                                                <Label layoutX="120" layoutY="14" text="CNE:" />
+                                                <TextField fx:id="CarteCne"
+                                                           layoutX="160" layoutY="10" />
+
+                                                <Button layoutX="320" layoutY="10"
+                                                        text="Générer"
+                                                        onAction="#GenererCarte" />
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </TitledPane>
+
+                            </children>
+                        </VBox>
+                    </AnchorPane>
+                </Tab>
+
+                <!-- ==================== TAB: MODULES ==================== -->
+                <Tab text="Modules">
+                    <AnchorPane>
+                        <children>
+                            <CheckBox fx:id="tousmod"
+                                      layoutX="14" layoutY="14"
+                                      text="Tous Modules" />
+
+                            <CheckBox fx:id="unseulmod"
+                                      layoutX="14" layoutY="44"
+                                      text="Un seul Module" />
+
+                            <Label layoutX="14" layoutY="74" text="Code:" />
+                            <TextField fx:id="CodeModule"
+                                       layoutX="60" layoutY="70" />
+
+                            <Button layoutX="14" layoutY="110"
+                                    text="Afficher"
+                                    onAction="#AffichageMod" />
+                        </children>
+                    </AnchorPane>
+                </Tab>
+
+            </tabs>
+        </TabPane>
+    </children>
+</AnchorPane>
